@@ -16,7 +16,7 @@ class ComlinkCLI {
   }
 
   async start(): Promise<void> {
-    console.log('🔗 Welcome to Comlink CLI!');
+    console.log('🛰️ Welcome to Comlink CLI!');
     console.log('Commands:');
     console.log('  login <identifier> <password> - Authenticate with Bluesky');
     console.log('  install <tool> - Install a tool');
