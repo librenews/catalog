@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 
-import { SocialCatalogClient } from './social-catalog-client.js';
+import { ComlinkClient } from './comlink-client.js';
 import * as readline from 'readline';
 
-class SocialCatalogCLI {
-  private client: SocialCatalogClient;
+class ComlinkCLI {
+  private client: ComlinkClient;
   private rl: readline.Interface;
 
   constructor() {
-    this.client = new SocialCatalogClient();
+    this.client = new ComlinkClient();
     this.rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout,
@@ -16,7 +16,7 @@ class SocialCatalogCLI {
   }
 
   async start(): Promise<void> {
-    console.log('🐱 Welcome to social.catalog CLI!');
+    console.log('🔗 Welcome to Comlink CLI!');
     console.log('Commands:');
     console.log('  login <identifier> <password> - Authenticate with Bluesky');
     console.log('  install <tool> - Install a tool');
@@ -173,8 +173,8 @@ class SocialCatalogCLI {
 
 // Start the CLI if this file is run directly
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const cli = new SocialCatalogCLI();
+  const cli = new ComlinkCLI();
   cli.start().catch(console.error);
 }
 
-export { SocialCatalogCLI };
+export { ComlinkCLI };

@@ -122,7 +122,7 @@ const tools: Tool[] = [
   },
 ];
 
-class SocialCatalogServer {
+class ComlinkServer {
   private server: Server;
   private agent: AtpAgent;
   private toolCache: ToolCache;
@@ -133,7 +133,7 @@ class SocialCatalogServer {
   constructor() {
     this.server = new Server(
       {
-        name: 'social.catalog',
+        name: 'comlink',
         version: '1.0.0',
       },
       {
@@ -473,8 +473,8 @@ class SocialCatalogServer {
 
 // Start the server if this file is run directly
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const server = new SocialCatalogServer();
+  const server = new ComlinkServer();
   server.run().catch(console.error);
 }
 
-export { SocialCatalogServer };
+export { ComlinkServer };

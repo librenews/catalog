@@ -25,7 +25,7 @@ interface PostIntent {
   confidence: number;
 }
 
-class SocialCatalogClient {
+class ComlinkClient {
   private agent: AtpAgent;
   private session?: AtpSessionData;
   private installedTools: Map<string, InstalledTool> = new Map();
@@ -317,4 +317,4 @@ class SocialCatalogClient {
   }
 }
 
-export { SocialCatalogClient };
+export { ComlinkClient };

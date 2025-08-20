@@ -1,7 +1,7 @@
 {
-  "name": "catalog-social",
+  "name": "comlink",
   "version": "1.0.0",
-  "description": "",
+  "description": "A social command line on Bluesky powered by MCP",
   "type": "module",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,7 @@
     "dev": "ts-node src/client/cli.ts",
     "installer": "node dist/mcp-servers/installer.js",
     "giphy": "node dist/mcp-servers/giphy.js",
-    "server": "node dist/mcp-servers/social-catalog-server.js",
+    "server": "node dist/mcp-servers/comlink-server.js",
     "demo": "node dist/test-demo.js",
     "test-new": "node dist/test-new-architecture.js",
     "web": "npx http-server src/web -p 1111 -o",

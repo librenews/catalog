@@ -15,7 +15,7 @@ export interface ChatInterface {
   clearHistory(): void;
 }
 
-export class SocialCatalogChat implements ChatInterface {
+export class ComlinkChat implements ChatInterface {
   private client: Client;
   private history: ChatMessage[] = [];
   private userId: string;
@@ -23,7 +23,7 @@ export class SocialCatalogChat implements ChatInterface {
   constructor(userId: string = 'default') {
     this.userId = userId;
     this.client = new Client({
-      name: 'social.catalog.web',
+              name: 'comlink.web',
       version: '1.0.0',
     }, {
       capabilities: {

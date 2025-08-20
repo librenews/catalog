@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
-import { SocialCatalogClient } from './client/social-catalog-client.js';
+import { ComlinkClient } from './client/comlink-client.js';
 
 async function runDemo() {
   console.log('🐱 social.catalog Demo');
   console.log('=====================\n');
 
   // Create a client instance
-  const client = new SocialCatalogClient();
+  const client = new ComlinkClient();
 
   // Mock authentication (in real usage, this would be actual Bluesky credentials)
   console.log('1. Mocking authentication...');

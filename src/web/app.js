@@ -1,5 +1,5 @@
-// Skywire Web Interface
-class SocialCatalogWeb {
+// Comlink Web Interface
+class ComlinkWeb {
     constructor() {
         this.userId = 'web-user-' + Date.now();
         this.isConnected = false;
@@ -93,7 +93,7 @@ class SocialCatalogWeb {
 
     async connectToServer() {
         try {
-            this.showLoading('Connecting to Skywire server...');
+            this.showLoading('Connecting to Comlink server...');
             
             // For now, we'll simulate the connection
             // In a real implementation, this would connect to the MCP server
@@ -101,7 +101,7 @@ class SocialCatalogWeb {
             
             this.isConnected = true;
             this.hideLoading();
-            this.addBotMessage('✅ Connected to Skywire server! You can now start chatting.');
+            this.addBotMessage('✅ Connected to Comlink server! You can now start chatting.');
             
         } catch (error) {
             this.hideLoading();
@@ -193,7 +193,7 @@ Try the sidebar buttons for quick actions!`;
         
         return `🐱 Installing ${toolName}...
 
-            ✅ Successfully installed ${toolName} (skywire.${toolName})
+            ✅ Successfully installed ${toolName} (comlink.${toolName})
 
 You can now use it with natural language:
 • "happy birthday with a ${toolName}"
@@ -203,9 +203,9 @@ You can now use it with natural language:
     getListResponse() {
         return `🐱 Your installed tools:
 
-• **giphy** (skywire.giphy) - Search and attach GIFs
-• **weather** (skywire.weather) - Get weather information
-• **maps** (skywire.maps) - Get directions and location info
+• **giphy** (comlink.giphy) - Search and attach GIFs
+• **weather** (comlink.weather) - Get weather information
+• **maps** (comlink.maps) - Get directions and location info
 
 No tools installed? Try "install giphy" to get started!`;
     }
@@ -216,11 +216,11 @@ No tools installed? Try "install giphy" to get started!`;
         
         return `🐱 Found tools matching "${query}":
 
-• **Giphy** (skywire.giphy) - Search and attach GIFs
-• **Weather** (skywire.weather) - Get weather information
-• **Maps** (skywire.maps) - Get directions and location info
-• **Calculator** (skywire.calc) - Mathematical calculations
-• **Translator** (skywire.translate) - Language translation
+• **Giphy** (comlink.giphy) - Search and attach GIFs
+• **Weather** (comlink.weather) - Get weather information
+• **Maps** (comlink.maps) - Get directions and location info
+• **Calculator** (comlink.calc) - Mathematical calculations
+• **Translator** (comlink.translate) - Language translation
 
 Install any tool with "install <name>"`;
     }
@@ -266,9 +266,9 @@ Try: "install weather" for real-time data!`;
 
 ✅ Scan complete! Found 3 new tools:
 
-• **skywire.news** - Latest news headlines
-• **skywire.music** - Music search and playback
-• **skywire.recipes** - Recipe finder and meal planning
+• **comlink.news** - Latest news headlines
+• **comlink.music** - Music search and playback
+• **comlink.recipes** - Recipe finder and meal planning
 
 Tools are now available for installation!`;
     }
@@ -436,5 +436,5 @@ Or use natural language:
 
 // Initialize the application when the page loads
 document.addEventListener('DOMContentLoaded', () => {
-    new SocialCatalogWeb();
+    new ComlinkWeb();
 });
