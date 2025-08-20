@@ -3,7 +3,7 @@
 import { ComlinkClient } from './client/comlink-client.js';
 
 async function runDemo() {
-  console.log('🐱 social.catalog Demo');
+  console.log('🛰️ Comlink Demo');
   console.log('=====================\n');
 
   // Create a client instance
@@ -23,7 +23,7 @@ async function runDemo() {
   try {
     await client.connectInstaller();
   } catch (error) {
-    console.log('🐱 Note: Installer connection failed (this is expected in demo mode)');
+    console.log('🛰️ Note: Installer connection failed (this is expected in demo mode)');
     console.log('   In a real setup, the installer MCP server would be running');
   }
 
@@ -33,7 +33,7 @@ async function runDemo() {
     const discoveryResult = await client.discoverTools('gif');
     console.log(discoveryResult);
   } catch (error) {
-    console.log('🐱 Discovery result: Found 3 tools: Giphy, Weather, Maps');
+    console.log('🛰️ Discovery result: Found 3 tools: Giphy, Weather, Maps');
     console.log('   (Mock result since installer is not connected)');
   }
 
@@ -43,7 +43,7 @@ async function runDemo() {
     const installResult = await client.installTool('giphy');
     console.log(installResult);
   } catch (error) {
-    console.log('🐱 Install result: Installed social.catalog.giphy');
+    console.log('🛰️ Install result: Installed comlink.giphy');
     console.log('   (Mock result since installer is not connected)');
   }
 
@@ -53,7 +53,7 @@ async function runDemo() {
     const listResult = await client.listInstalledTools();
     console.log(listResult);
   } catch (error) {
-    console.log('🐱 List result: Installed tools:\n• social.catalog.giphy@^1.0.0\n• social.catalog.weather@1.0.0');
+    console.log('🛰️ List result: Installed tools:\n• comlink.giphy@^1.0.0\n• comlink.weather@1.0.0');
     console.log('   (Mock result since installer is not connected)');
   }
 
@@ -73,7 +73,7 @@ async function runDemo() {
       const processed = await client.processPost(post);
       console.log(`Output: ${processed}`);
     } catch (error) {
-      console.log(`Output: 🐱 Found GIF for "happy birthday"! [Mock: Would attach GIF here]`);
+      console.log(`Output: 🛰️ Found GIF for "happy birthday"! [Mock: Would attach GIF here]`);
     }
   }
 
@@ -83,11 +83,11 @@ async function runDemo() {
     const uninstallResult = await client.uninstallTool('giphy');
     console.log(uninstallResult);
   } catch (error) {
-    console.log('🐱 Uninstall result: Uninstalled giphy');
+    console.log('🛰️ Uninstall result: Uninstalled giphy');
     console.log('   (Mock result since installer is not connected)');
   }
 
-  console.log('\n🐱 Demo completed!');
+  console.log('\n🛰️ Demo completed!');
   console.log('\nTo run the full CLI with real Bluesky integration:');
   console.log('  npm run dev');
   console.log('\nTo test individual MCP servers:');

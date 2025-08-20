@@ -4,12 +4,12 @@ import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 
 async function testNewArchitecture() {
-  console.log('🐱 Testing New social.catalog Architecture');
+  console.log('🛰️ Testing New Comlink Architecture');
   console.log('==========================================\n');
 
   // Create MCP client
   const client = new Client({
-    name: 'social.catalog.test',
+            name: 'comlink.test',
     version: '1.0.0',
   }, {
     capabilities: {
@@ -18,15 +18,15 @@ async function testNewArchitecture() {
   });
 
   try {
-    // Connect to the social.catalog server
-    console.log('1. Connecting to social.catalog MCP server...');
+    // Connect to the comlink server
+    console.log('1. Connecting to comlink MCP server...');
     const transport = new StdioClientTransport({
       command: 'node',
       args: ['dist/mcp-servers/social-catalog-server.js'],
     });
 
     await client.connect(transport);
-    console.log('✅ Connected to social.catalog server');
+    console.log('✅ Connected to comlink server');
 
     // Test 1: Get available tools
     console.log('\n2. Getting available tools...');
@@ -103,7 +103,7 @@ async function testNewArchitecture() {
     });
     console.log('✅ Uninstall response:', (uninstallResult.content as any[])[0].text);
 
-    console.log('\n🐱 All tests completed successfully!');
+    console.log('\n🛰️ All tests completed successfully!');
     console.log('\nNew Architecture Features:');
     console.log('✅ MCP Server with tool discovery');
     console.log('✅ Cached tool registry');
