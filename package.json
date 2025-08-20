@@ -19,15 +19,23 @@
     "api:dev": "node --watch src/web-api/server.js",
     "dev:full": "concurrently \"npm run api\" \"npm run web\"",
     "setup": "node scripts/setup-env.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:unit": "jest tests/unit",
+    "test:integration": "jest tests/integration"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@jest/globals": "^30.0.5",
+    "@types/jest": "^30.0.0",
     "@types/node": "^24.3.0",
     "concurrently": "^8.2.2",
     "http-server": "^14.1.1",
+    "jest": "^30.0.5",
+    "ts-jest": "^29.4.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
   },

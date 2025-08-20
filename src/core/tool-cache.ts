@@ -49,11 +49,19 @@ export class ToolCache {
    * Search tools by name, description, or tags
    */
   searchTools(query: string, limit: number = 10): ToolSearchResult {
-    if (!query || typeof query !== 'string') {
+    if (query === null || query === undefined || typeof query !== 'string') {
       return {
         tools: [],
         total: 0,
-        query: query || 'undefined',
+        query: query === null || query === undefined ? 'undefined' : query,
+      };
+    }
+
+    if (query === '') {
+      return {
+        tools: [],
+        total: 0,
+        query: '',
       };
     }
     
@@ -61,26 +69,35 @@ export class ToolCache {
     const results: CachedTool[] = [];
 
     for (const tool of this.tools.values()) {
-      const matchesName = tool.name.toLowerCase().includes(lowerQuery);
-      const matchesDescription = tool.description.toLowerCase().includes(lowerQuery);
-      const matchesTags = tool.tags.some(tag => tag.toLowerCase().includes(lowerQuery));
-      const matchesId = tool.id.toLowerCase().includes(lowerQuery);
+      const matchesName = tool.name && tool.name.toLowerCase().includes(lowerQuery);
+      const matchesDescription = tool.description && tool.description.toLowerCase().includes(lowerQuery);
+      const matchesTags = tool.tags && Array.isArray(tool.tags) && 
+        tool.tags.some(tag => tag && tag.toLowerCase().includes(lowerQuery));
+      const matchesCapabilities = tool.capabilities && Array.isArray(tool.capabilities) && 
+        tool.capabilities.some(cap => cap && cap.toLowerCase().includes(lowerQuery));
+      const matchesId = tool.id && tool.id.toLowerCase().includes(lowerQuery);
 
-      if (matchesName || matchesDescription || matchesTags || matchesId) {
+      if (matchesName || matchesDescription || matchesTags || matchesCapabilities || matchesId) {
         results.push(tool);
       }
     }
 
-    // Sort by relevance (exact name matches first, then description, then tags)
+    // Sort by relevance (exact name matches first, then description, then tags/capabilities)
     results.sort((a, b) => {
-      const aNameMatch = a.name.toLowerCase() === lowerQuery ? 3 : 0;
-      const bNameMatch = b.name.toLowerCase() === lowerQuery ? 3 : 0;
-      const aDescMatch = a.description.toLowerCase().includes(lowerQuery) ? 2 : 0;
-      const bDescMatch = b.description.toLowerCase().includes(lowerQuery) ? 2 : 0;
-      const aTagMatch = a.tags.some(tag => tag.toLowerCase().includes(lowerQuery)) ? 1 : 0;
-      const bTagMatch = b.tags.some(tag => tag.toLowerCase().includes(lowerQuery)) ? 1 : 0;
+      const aNameMatch = (a.name && a.name.toLowerCase() === lowerQuery) ? 4 : 0;
+      const bNameMatch = (b.name && b.name.toLowerCase() === lowerQuery) ? 4 : 0;
+      const aDescMatch = (a.description && a.description.toLowerCase().includes(lowerQuery)) ? 3 : 0;
+      const bDescMatch = (b.description && b.description.toLowerCase().includes(lowerQuery)) ? 3 : 0;
+      const aTagMatch = (a.tags && Array.isArray(a.tags) && 
+        a.tags.some(tag => tag && tag.toLowerCase().includes(lowerQuery))) ? 2 : 0;
+      const bTagMatch = (b.tags && Array.isArray(b.tags) && 
+        b.tags.some(tag => tag && tag.toLowerCase().includes(lowerQuery))) ? 2 : 0;
+      const aCapMatch = (a.capabilities && Array.isArray(a.capabilities) && 
+        a.capabilities.some(cap => cap && cap.toLowerCase().includes(lowerQuery))) ? 1 : 0;
+      const bCapMatch = (b.capabilities && Array.isArray(b.capabilities) && 
+        b.capabilities.some(cap => cap && cap.toLowerCase().includes(lowerQuery))) ? 1 : 0;
 
-      return (bNameMatch + bDescMatch + bTagMatch) - (aNameMatch + aDescMatch + aTagMatch);
+      return (bNameMatch + bDescMatch + bTagMatch + bCapMatch) - (aNameMatch + aDescMatch + aTagMatch + aCapMatch);
     });
 
     return {
