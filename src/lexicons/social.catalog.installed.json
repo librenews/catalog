@@ -1,0 +1,30 @@
+{
+  "lexicon": 1,
+  "id": "social.catalog.installed",
+  "defs": {
+    "record": {
+      "type": "record",
+      "description": "User-installed MCP tools registry",
+      "key": "did",
+      "properties": {
+        "tools": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Array of installed tool IDs with optional version constraints (e.g., 'social.catalog.giphy@^1.0.0')"
+        },
+        "installedAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "Timestamp when this registry was last updated"
+        },
+        "version": {
+          "type": "string",
+          "description": "Registry schema version"
+        }
+      },
+      "required": ["tools", "installedAt", "version"]
+    }
+  }
+}

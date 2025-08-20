@@ -1,0 +1,60 @@
+{
+  "lexicon": 1,
+  "id": "social.catalog.mcp",
+  "defs": {
+    "toolWrapper": {
+      "type": "record",
+      "description": "MCP tool wrapper for social.catalog",
+      "key": "toolId",
+      "properties": {
+        "toolId": {
+          "type": "string",
+          "description": "Reverse domain identifier for the tool (e.g., social.catalog.giphy)"
+        },
+        "endpoint": {
+          "type": "string",
+          "description": "MCP server URI endpoint"
+        },
+        "version": {
+          "type": "string",
+          "description": "Semver version string"
+        },
+        "inputSchema": {
+          "type": "object",
+          "description": "JSON schema for tool input parameters"
+        },
+        "outputSchema": {
+          "type": "object",
+          "description": "JSON schema for tool output"
+        },
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Array of capability tags (e.g., ['search', 'media-attach'])"
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of the tool"
+        },
+        "author": {
+          "type": "string",
+          "description": "Tool author/maintainer"
+        },
+        "homepage": {
+          "type": "string",
+          "description": "Optional homepage URL for the tool"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Searchable tags for discovery"
+        }
+      },
+      "required": ["toolId", "endpoint", "version", "inputSchema", "outputSchema", "capabilities", "description"]
+    }
+  }
+}

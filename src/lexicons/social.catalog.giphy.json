@@ -1,0 +1,105 @@
+{
+  "lexicon": 1,
+  "id": "social.catalog.giphy",
+  "defs": {
+    "toolWrapper": {
+      "type": "record",
+      "description": "Giphy GIF search tool wrapper",
+      "key": "toolId",
+      "properties": {
+        "toolId": {
+          "type": "string",
+          "const": "social.catalog.giphy"
+        },
+        "endpoint": {
+          "type": "string",
+          "description": "MCP server URI for Giphy integration"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Search query for GIFs"
+            },
+            "rating": {
+              "type": "string",
+              "enum": ["g", "pg", "pg-13", "r"],
+              "default": "g",
+              "description": "Content rating filter"
+            },
+            "limit": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 10,
+              "default": 1,
+              "description": "Number of GIFs to return"
+            }
+          },
+          "required": ["query"]
+        },
+        "outputSchema": {
+          "type": "object",
+          "properties": {
+            "gifs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "previewUrl": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "width": {
+                    "type": "number"
+                  },
+                  "height": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "const": ["search", "media-attach", "gif"]
+        },
+        "description": {
+          "type": "string",
+          "const": "Search and attach GIFs from Giphy to your posts"
+        },
+        "author": {
+          "type": "string",
+          "const": "social.catalog"
+        },
+        "homepage": {
+          "type": "string",
+          "const": "https://giphy.com"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "const": ["gif", "media", "search", "entertainment", "reactions"]
+        }
+      }
+    }
+  }
+}
