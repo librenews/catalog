@@ -5,6 +5,7 @@ A social command line on Bluesky powered by MCP (Model Context Protocol).
 ## Features
 
 - **🛰️ MCP Server Integration** - Real Model Context Protocol server
+- **🤖 AI-Powered NLU** - Intelligent natural language understanding
 - **🎬 Giphy API Integration** - Search and display GIFs
 - **🌐 Web Interface** - Modern chat-based UI
 - **🔧 Tool Management** - Install and manage tools
@@ -32,6 +33,7 @@ cp .env.example .env
 ```env
 # API Keys
 GIPHY_API_KEY=your_giphy_api_key_here
+OPENAI_API_KEY=your_openai_api_key_here
 
 # Server Configuration
 API_PORT=3001
@@ -42,10 +44,17 @@ NODE_ENV=development
 DEBUG=false
 ```
 
-**Getting a Giphy API Key:**
+**Getting API Keys:**
+
+**Giphy API Key:**
 1. Visit [Giphy Developers](https://developers.giphy.com/)
 2. Create an account and app
 3. Copy your API key to `GIPHY_API_KEY` in `.env`
+
+**OpenAI API Key (for AI features):**
+1. Visit [OpenAI Platform](https://platform.openai.com/api-keys)
+2. Create an account and generate an API key
+3. Copy your API key to `OPENAI_API_KEY` in `.env`
 
 ### 3. Build the Project
 

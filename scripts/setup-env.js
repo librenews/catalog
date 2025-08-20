@@ -13,6 +13,7 @@ const envTemplate = `# Comlink Environment Configuration
 
 # API Keys
 GIPHY_API_KEY=dc6zaTOxFJmzC
+OPENAI_API_KEY=
 
 # Server Configuration
 API_PORT=3001
@@ -44,8 +45,9 @@ try {
   console.log('\n📝 Next steps:');
   console.log('1. Edit .env file with your API keys');
   console.log('2. Get a Giphy API key from: https://developers.giphy.com/');
-  console.log('3. Replace GIPHY_API_KEY=dc6zaTOxFJmzC with your actual key');
-  console.log('4. Run: npm run build && npm run dev:full');
+  console.log('3. Get an OpenAI API key from: https://platform.openai.com/api-keys');
+  console.log('4. Replace the API keys with your actual keys');
+  console.log('5. Run: npm run build && npm run dev:full');
   console.log('\n🔒 Note: .env is already in .gitignore for security');
 } catch (error) {
   console.error('❌ Failed to create .env file:', error.message);

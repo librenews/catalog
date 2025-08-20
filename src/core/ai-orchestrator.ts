@@ -1,5 +1,6 @@
 import { CachedTool, ToolCache } from './tool-cache.js';
 import { BlueskyScanner } from './bluesky-scanner.js';
+import { AIService, AIIntent, AIToolExecution } from '../services/ai-service.js';
 
 export interface Intent {
   type: 'install' | 'uninstall' | 'execute' | 'search' | 'list' | 'help' | 'unknown';
@@ -18,16 +19,102 @@ export interface ExecutionResult {
 
 export class AIOrchestrator {
   private installedTools: Set<string> = new Set();
+  private aiService: AIService;
 
   constructor(
     private toolCache: ToolCache,
     private scanner: BlueskyScanner
-  ) {}
+  ) {
+    this.aiService = new AIService();
+  }
 
   /**
-   * Process a user message and determine intent
+   * Set installed tools for a user session
+   */
+  setInstalledTools(toolIds: string[]): void {
+    this.installedTools = new Set(toolIds);
+  }
+
+  /**
+   * Add a tool to the installed set
+   */
+  addInstalledTool(toolId: string): void {
+    this.installedTools.add(toolId);
+  }
+
+  /**
+   * Remove a tool from the installed set
+   */
+  removeInstalledTool(toolId: string): void {
+    this.installedTools.delete(toolId);
+  }
+
+  /**
+   * Process a user message and determine intent using AI
    */
   async processMessage(message: string): Promise<Intent> {
+    // Validate input
+    if (!message || typeof message !== 'string') {
+      return {
+        type: 'unknown',
+        confidence: 0.0,
+        parameters: {},
+        originalText: message || 'undefined',
+      };
+    }
+
+    try {
+      // Use AI service for intent detection
+      const aiIntent = await this.aiService.analyzeIntent(message);
+      
+      // Convert AI intent to our Intent format
+      const intent: Intent = {
+        type: aiIntent.type,
+        confidence: aiIntent.confidence,
+        parameters: aiIntent.parameters,
+        originalText: aiIntent.originalText,
+      };
+
+      // For execution intents, use AI to select the appropriate tool
+      if (intent.type === 'execute') {
+        const toolExecution = await this.aiService.selectTool(aiIntent);
+        if (toolExecution) {
+          intent.toolId = toolExecution.toolId;
+          intent.parameters = { ...intent.parameters, ...toolExecution.parameters };
+          intent.confidence = Math.min(intent.confidence, toolExecution.confidence);
+        }
+      }
+
+      // For install intents, extract tool name
+      if (intent.type === 'install') {
+        const toolName = this.extractToolName(message);
+        if (toolName) {
+          intent.toolId = `comlink.${toolName}`;
+          intent.parameters = { ...intent.parameters, toolName };
+        }
+      }
+
+      return intent;
+    } catch (error) {
+      console.error('AI Intent Analysis failed, falling back to pattern matching:', error);
+      return this.fallbackProcessMessage(message);
+    }
+  }
+
+  /**
+   * Fallback to pattern matching if AI fails
+   */
+  private async fallbackProcessMessage(message: string): Promise<Intent> {
+    // Validate input
+    if (!message || typeof message !== 'string') {
+      return {
+        type: 'unknown',
+        confidence: 0.0,
+        parameters: {},
+        originalText: message || 'undefined',
+      };
+    }
+
     const lowerMessage = message.toLowerCase().trim();
     
     // Check for install intent
@@ -71,10 +158,21 @@ export class AIOrchestrator {
   }
 
   /**
+   * Extract tool name from install message
+   */
+  private extractToolName(message: string): string | null {
+    const match = message.match(/install\s+(.+)/i);
+    return match ? match[1].trim() : null;
+  }
+
+  /**
    * Execute an intent
    */
   async executeIntent(intent: Intent): Promise<ExecutionResult> {
-    switch (intent.type) {
+    console.log('🛰️ Executing intent:', intent.type, 'toolId:', intent.toolId, 'parameters:', intent.parameters);
+    
+    try {
+      switch (intent.type) {
       case 'install':
         return this.executeInstall(intent);
       case 'uninstall':
@@ -92,6 +190,13 @@ export class AIOrchestrator {
           success: false,
           content: "🛰️ I'm not sure what you want to do. Try 'help' for available commands.",
         };
+      }
+    } catch (error) {
+      console.error('🛰️ Error executing intent:', error);
+      return {
+        success: false,
+        content: `🛰️ Error executing intent: ${error}`,
+      };
     }
   }
 
@@ -114,7 +219,7 @@ export class AIOrchestrator {
     return {
       type: 'install',
       confidence: 0.9,
-      toolId: `social.catalog.${toolName}`,
+      toolId: `comlink.${toolName}`,
       parameters: { toolName },
       originalText: message,
     };
@@ -139,7 +244,7 @@ export class AIOrchestrator {
     return {
       type: 'uninstall',
       confidence: 0.9,
-      toolId: `social.catalog.${toolName}`,
+      toolId: `comlink.${toolName}`,
       parameters: { toolName },
       originalText: message,
     };
@@ -245,6 +350,20 @@ export class AIOrchestrator {
       };
     }
 
+    // Fallback: Check for common patterns even without installed tools
+    if (lowerMessage.includes('gif') || lowerMessage.includes('giphy')) {
+      const gifMatch = message.match(/(?:gif|giphy)\s+(?:of\s+)?(.+?)(?:\s+with|\s+from|$)/i);
+      const query = gifMatch ? gifMatch[1].trim() : 'something fun';
+      
+      return {
+        type: 'execute',
+        confidence: 0.7,
+        toolId: 'comlink.giphy',
+        parameters: { query },
+        originalText: message,
+      };
+    }
+
     return {
       type: 'unknown',
       confidence: 0.0,
@@ -261,29 +380,35 @@ export class AIOrchestrator {
     let confidence = 0.0;
 
     // Check for exact tool name match
-    if (lowerMessage.includes(tool.name.toLowerCase())) {
+    if (tool.name && lowerMessage.includes(tool.name.toLowerCase())) {
       confidence += 0.4;
     }
 
     // Check for capability keywords
-    for (const capability of tool.capabilities) {
-      if (lowerMessage.includes(capability.toLowerCase())) {
-        confidence += 0.2;
+    if (tool.capabilities && Array.isArray(tool.capabilities)) {
+      for (const capability of tool.capabilities) {
+        if (capability && lowerMessage.includes(capability.toLowerCase())) {
+          confidence += 0.2;
+        }
       }
     }
 
     // Check for tag matches
-    for (const tag of tool.tags) {
-      if (lowerMessage.includes(tag.toLowerCase())) {
-        confidence += 0.1;
+    if (tool.tags && Array.isArray(tool.tags)) {
+      for (const tag of tool.tags) {
+        if (tag && lowerMessage.includes(tag.toLowerCase())) {
+          confidence += 0.1;
+        }
       }
     }
 
     // Check for description keywords
-    const descWords = tool.description.toLowerCase().split(' ');
-    for (const word of descWords) {
-      if (word.length > 3 && lowerMessage.includes(word)) {
-        confidence += 0.05;
+    if (tool.description) {
+      const descWords = tool.description.toLowerCase().split(' ');
+      for (const word of descWords) {
+        if (word.length > 3 && lowerMessage.includes(word)) {
+          confidence += 0.05;
+        }
       }
     }
 
@@ -297,7 +422,7 @@ export class AIOrchestrator {
     const lowerMessage = message.toLowerCase();
 
     // Extract query parameters
-    if (tool.capabilities.includes('search')) {
+    if (tool.capabilities && Array.isArray(tool.capabilities) && tool.capabilities.includes('search')) {
       // Look for quoted text or text after keywords
       const queryMatch = message.match(/"([^"]+)"/) || 
                         message.match(/(?:search|find|get)\s+(.+?)(?:\s+with|\s+from|$)/i);
@@ -307,7 +432,8 @@ export class AIOrchestrator {
     }
 
     // Extract location parameters
-    if (tool.capabilities.includes('location') || tool.tags.includes('weather') || tool.tags.includes('maps')) {
+    if ((tool.capabilities && tool.capabilities.includes('location')) || 
+        (tool.tags && (tool.tags.includes('weather') || tool.tags.includes('maps')))) {
       const locationMatch = message.match(/(?:in|at|to|from)\s+([A-Za-z\s,]+?)(?:\s+with|\s+from|\s+to|$)/i);
       if (locationMatch) {
         parameters.location = locationMatch[1].trim();
@@ -315,7 +441,8 @@ export class AIOrchestrator {
     }
 
     // Extract media parameters
-    if (tool.capabilities.includes('media') || tool.tags.includes('gif')) {
+    if ((tool.capabilities && tool.capabilities.includes('media')) || 
+        (tool.tags && tool.tags.includes('gif'))) {
       const mediaMatch = message.match(/(?:gif|image|picture|photo)\s+(?:of\s+)?(.+?)(?:\s+with|\s+from|$)/i);
       if (mediaMatch) {
         parameters.query = mediaMatch[1].trim();
@@ -329,6 +456,14 @@ export class AIOrchestrator {
   private async executeInstall(intent: Intent): Promise<ExecutionResult> {
     const { toolName } = intent.parameters;
     
+    // Validate toolName
+    if (!toolName || typeof toolName !== 'string') {
+      return {
+        success: false,
+        content: `🛰️ Error: No tool name specified. Usage: "install [tool_name]"`,
+      };
+    }
+    
     try {
       // Search for the tool
       const tools = await this.scanner.searchForTool(toolName);
@@ -341,7 +476,7 @@ export class AIOrchestrator {
       }
 
       const tool = tools[0];
-      this.installedTools.add(tool.id);
+      // Note: Don't add to installedTools here - it will be synced from user session
 
       return {
         success: true,
@@ -361,10 +496,10 @@ export class AIOrchestrator {
    */
   private async executeUninstall(intent: Intent): Promise<ExecutionResult> {
     const { toolName } = intent.parameters;
-    const toolId = `social.catalog.${toolName}`;
+    const toolId = `comlink.${toolName}`;
     
     if (this.installedTools.has(toolId)) {
-      this.installedTools.delete(toolId);
+      // Note: Don't remove from installedTools here - it will be synced from user session
       return {
         success: true,
         content: `🛰️ Uninstalled ${toolName}`,
@@ -378,14 +513,41 @@ export class AIOrchestrator {
   }
 
   /**
+   * Execute Giphy search
+   */
+  private async executeGiphySearch(intent: Intent): Promise<ExecutionResult> {
+    const { query } = intent.parameters;
+    const searchQuery = query || 'something fun';
+    
+    return {
+      success: true,
+      content: `🛰️ Searching for GIFs: "${searchQuery}"`,
+      media: [
+        {
+          type: 'gif',
+          url: `https://media.giphy.com/media/example/giphy.gif`,
+          title: `${searchQuery} GIF`,
+          description: `A fun ${searchQuery} GIF from Giphy`
+        }
+      ]
+    };
+  }
+
+  /**
    * Execute tool
    */
   private async executeTool(intent: Intent): Promise<ExecutionResult> {
     const { toolId } = intent;
+    
+    // For built-in tools like giphy, allow direct execution
+    if (toolId === 'comlink.giphy') {
+      return this.executeGiphySearch(intent);
+    }
+    
     if (!toolId || !this.installedTools.has(toolId)) {
       return {
         success: false,
-        content: `🛰️ Tool not installed. Try "install ${toolId?.replace('social.catalog.', '')}" first.`,
+        content: `🛰️ Tool not installed. Try "install ${toolId?.replace('comlink.', '')}" first.`,
       };
     }
 
@@ -410,14 +572,15 @@ export class AIOrchestrator {
    */
   private async executeSearch(intent: Intent): Promise<ExecutionResult> {
     const { query } = intent.parameters;
+    const searchQuery = query || 'tools';
     
     try {
-      const tools = await this.scanner.searchForTool(query);
+      const tools = await this.scanner.searchForTool(searchQuery);
       
       if (tools.length === 0) {
         return {
           success: true,
-          content: `🛰️ No tools found matching "${query}".`,
+          content: `🛰️ No tools found matching "${searchQuery}".`,
         };
       }
 

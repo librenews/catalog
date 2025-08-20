@@ -49,6 +49,14 @@ export class ToolCache {
    * Search tools by name, description, or tags
    */
   searchTools(query: string, limit: number = 10): ToolSearchResult {
+    if (!query || typeof query !== 'string') {
+      return {
+        tools: [],
+        total: 0,
+        query: query || 'undefined',
+      };
+    }
+    
     const lowerQuery = query.toLowerCase();
     const results: CachedTool[] = [];
 

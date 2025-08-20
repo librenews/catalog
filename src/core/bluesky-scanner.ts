@@ -235,7 +235,51 @@ export class BlueskyScanner {
       return cachedResults.tools;
     }
 
-    // If not in cache, do a live search
+    // Mock tool registry for testing (Phase 4 will replace this with real Bluesky search)
+    const mockTools: CachedTool[] = [
+      {
+        id: 'comlink.giphy',
+        name: 'giphy',
+        description: 'Search and share GIFs from Giphy',
+        author: 'did:plc:mock-author',
+        repo: 'mock-repo',
+        lastSeen: new Date(),
+        capabilities: ['search', 'media'],
+        version: '1.0.0',
+        tags: ['gif', 'media', 'fun'],
+        homepage: 'https://giphy.com'
+      },
+      {
+        id: 'comlink.weather',
+        name: 'weather',
+        description: 'Get weather forecasts and current conditions',
+        author: 'did:plc:mock-author',
+        repo: 'mock-repo',
+        lastSeen: new Date(),
+        capabilities: ['search', 'location'],
+        version: '1.0.0',
+        tags: ['weather', 'forecast', 'location'],
+        homepage: 'https://weather.com'
+      }
+    ];
+
+    // Filter mock tools by query
+    const matchingTools = mockTools.filter(tool => 
+      tool.name.toLowerCase().includes(query.toLowerCase()) ||
+      tool.description.toLowerCase().includes(query.toLowerCase()) ||
+      tool.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase()))
+    );
+
+    // Add matching tools to cache
+    for (const tool of matchingTools) {
+      this.toolCache.addTool(tool);
+    }
+
+    if (matchingTools.length > 0) {
+      return matchingTools;
+    }
+
+    // If not in cache, do a live search (will fail without auth for now)
     const result: ScanResult = {
       toolsFound: 0,
       newTools: [],

@@ -188,16 +188,40 @@ class ComlinkServer {
   private async handleProcessMessage(args: any) {
     const { message, userId = 'default' } = args;
 
+    // Validate message parameter
+    if (!message || typeof message !== 'string') {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `🛰️ Error: Invalid message parameter. Received: ${typeof message}`,
+          },
+        ],
+      };
+    }
+
     try {
+      // Sync AI orchestrator with user session
+      const userTools = this.userSessions.get(userId) || new Set();
+      console.log('🛰️ User tools for', userId, ':', Array.from(userTools));
+      this.orchestrator.setInstalledTools(Array.from(userTools));
+      
       // Process the message with AI orchestrator
+      console.log('🛰️ Processing message:', message);
       const intent = await this.orchestrator.processMessage(message);
+      console.log('🛰️ Intent detected:', intent);
       const result = await this.orchestrator.executeIntent(intent);
+      console.log('🛰️ Execution result:', result);
 
       // Update user session if tool was installed/uninstalled
       if (intent.type === 'install' && result.success) {
+        console.log('🛰️ Updating user session - installing:', intent.toolId);
         this.updateUserSession(userId, intent.toolId!, true);
+        console.log('🛰️ User session after install:', Array.from(this.userSessions.get(userId) || []));
       } else if (intent.type === 'uninstall' && result.success) {
+        console.log('🛰️ Updating user session - uninstalling:', intent.toolId);
         this.updateUserSession(userId, intent.toolId!, false);
+        console.log('🛰️ User session after uninstall:', Array.from(this.userSessions.get(userId) || []));
       }
 
       return {

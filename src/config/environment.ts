@@ -8,6 +8,7 @@ config({ path: resolve(process.cwd(), '.env') });
 export interface EnvironmentConfig {
   // API Keys
   giphyApiKey: string;
+  openaiApiKey?: string;
   
   // Server Configuration
   apiPort: number;
@@ -26,6 +27,7 @@ export function loadEnvironment(): EnvironmentConfig {
   return {
     // API Keys
     giphyApiKey: process.env.GIPHY_API_KEY || 'dc6zaTOxFJmzC',
+    openaiApiKey: process.env.OPENAI_API_KEY,
     
     // Server Configuration
     apiPort: parseInt(process.env.API_PORT || '3001', 10),
