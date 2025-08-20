@@ -54,18 +54,50 @@ body {
 }
 
 .logo-icon {
-    font-size: 32px;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    font-size: 36px;
+    filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.4));
+    animation: pulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+    0% {
+        filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.4));
+        transform: scale(1);
+    }
+    100% {
+        filter: drop-shadow(0 0 30px rgba(118, 75, 162, 0.6));
+        transform: scale(1.05);
+    }
 }
 
 .logo h1 {
-    font-size: 24px;
-    font-weight: 700;
+    font-family: 'Orbitron', monospace;
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: 2px;
     color: #1f2937;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    text-shadow: 0 0 30px rgba(102, 126, 234, 0.3);
+    position: relative;
+}
+
+.logo h1::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    opacity: 0.7;
+    filter: blur(1px);
+    z-index: -1;
 }
 
 .header-actions {

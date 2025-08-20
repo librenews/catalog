@@ -1,4 +1,4 @@
-# social.catalog Web Interface 🐱
+# social.catalog Web Interface 🛰️
 
 A beautiful, responsive web chat interface for interacting with the social.catalog MCP server.
 

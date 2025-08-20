@@ -36,13 +36,13 @@ export class ComlinkChat implements ChatInterface {
     try {
       const transport = new StdioClientTransport({
         command: 'node',
-        args: ['dist/mcp-servers/social-catalog-server.js'],
+        args: ['dist/mcp-servers/comlink-server.js'],
       });
 
       await this.client.connect(transport);
-      console.log('🐱 Connected to social.catalog server');
+      console.log('🛰️ Connected to Comlink server');
     } catch (error) {
-      console.error('Failed to connect to social.catalog server:', error);
+      console.error('Failed to connect to Comlink server:', error);
       throw error;
     }
   }

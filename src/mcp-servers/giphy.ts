@@ -5,6 +5,7 @@ import {
   ListToolsRequestSchema,
   Tool,
 } from '@modelcontextprotocol/sdk/types.js';
+import { GiphyAPI } from '../services/giphy-api.js';
 
 // Tool definitions for Giphy
 const tools: Tool[] = [
@@ -39,11 +40,12 @@ const tools: Tool[] = [
 
 class GiphyServer {
   private server: Server;
+  private giphyAPI: GiphyAPI;
 
   constructor() {
     this.server = new Server(
       {
-        name: 'social.catalog.giphy',
+        name: 'comlink.giphy',
         version: '1.0.0',
       },
       {
@@ -53,6 +55,7 @@ class GiphyServer {
       }
     );
 
+    this.giphyAPI = new GiphyAPI();
     this.setupToolHandlers();
   }
 
@@ -77,48 +80,68 @@ class GiphyServer {
   private async handleSearchGifs(args: any) {
     const { query, rating = 'g', limit = 1 } = args;
 
-    // Mock Giphy API response
-    // In production, this would call the actual Giphy API
-    const mockGifs = [
-      {
-        id: 'mock-gif-1',
-        url: 'https://media.giphy.com/media/mock1/giphy.gif',
-        previewUrl: 'https://media.giphy.com/media/mock1/200.gif',
-        title: `GIF for "${query}"`,
-        width: 480,
-        height: 270,
-      },
-      {
-        id: 'mock-gif-2',
-        url: 'https://media.giphy.com/media/mock2/giphy.gif',
-        previewUrl: 'https://media.giphy.com/media/mock2/200.gif',
-        title: `Another GIF for "${query}"`,
-        width: 480,
-        height: 270,
-      },
-    ].slice(0, limit);
+    try {
+      // Use real Giphy API
+      const gifs = await this.giphyAPI.searchGifs(query, { rating, limit });
+      
+      if (gifs.length === 0) {
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `🛰️ No GIFs found for "${query}". Try a different search term!`,
+            },
+          ],
+        };
+      }
 
-    return {
-      content: [
-        {
-          type: 'text',
-          text: `Found ${mockGifs.length} GIF(s) for "${query}"`,
-        },
-        {
-          type: 'image_url',
-          image_url: {
-            url: mockGifs[0].url,
-            alt_text: mockGifs[0].title,
+      const gif = gifs[0]; // Get the first GIF
+      const apiStatus = this.giphyAPI.getAPIKeyStatus();
+      
+      let statusText = '';
+      if (apiStatus.type === 'demo') {
+        statusText = ' (using demo API - limited results)';
+      } else if (apiStatus.type === 'real') {
+        statusText = ' (using real Giphy API)';
+      }
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `🛰️ Found GIF for "${query}"${statusText}:
+
+**${gif.title}**
+• Source: ${gif.source}
+• Rating: ${gif.rating.toUpperCase()}
+• Size: ${gif.width}x${gif.height}`,
           },
-        },
-      ],
-    };
+          {
+            type: 'image_url',
+            image_url: {
+              url: gif.url,
+              alt_text: gif.title,
+            },
+          },
+        ],
+      };
+    } catch (error) {
+      console.error('Giphy search error:', error);
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `🛰️ Error searching for GIFs: ${error instanceof Error ? error.message : 'Unknown error'}. Please try again!`,
+          },
+        ],
+      };
+    }
   }
 
   async run() {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
-    console.error('social.catalog.giphy server running');
+    console.error('🛰️ comlink.giphy server running');
   }
 }
 

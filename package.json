@@ -14,6 +14,11 @@
     "demo": "node dist/test-demo.js",
     "test-new": "node dist/test-new-architecture.js",
     "web": "npx http-server src/web -p 1111 -o",
+    "web:restart": "pkill -f 'http-server' && sleep 1 && npx http-server src/web -p 1111 -o",
+    "api": "node src/web-api/server.js",
+    "api:dev": "node --watch src/web-api/server.js",
+    "dev:full": "concurrently \"npm run api\" \"npm run web\"",
+    "setup": "node scripts/setup-env.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -23,11 +28,16 @@
     "@types/node": "^24.3.0",
     "http-server": "^14.1.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "concurrently": "^8.2.2"
   },
   "dependencies": {
     "@atproto/api": "^0.16.2",
-    "@modelcontextprotocol/sdk": "^1.17.3"
+    "@modelcontextprotocol/sdk": "^1.17.3",
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "node-fetch": "^3.3.2",
+    "dotenv": "^16.3.1"
   },
   "ts-node": {
     "esm": true,

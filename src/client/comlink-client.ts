@@ -40,7 +40,7 @@ class ComlinkClient {
     try {
       const response = await this.agent.login({ identifier, password });
       this.session = response.data as AtpSessionData;
-      console.log('🐱 Authenticated with Bluesky');
+      console.log('🛰️ Authenticated with Bluesky');
     } catch (error) {
       console.error('Authentication failed:', error);
       throw error;
@@ -65,7 +65,7 @@ class ComlinkClient {
         this.installedTools.set(id, { id, version });
       }
 
-      console.log(`🐱 Loaded ${this.installedTools.size} installed tools`);
+      console.log(`🛰️ Loaded ${this.installedTools.size} installed tools`);
     } catch (error) {
       console.error('Failed to load installed tools:', error);
       throw error;
@@ -89,7 +89,7 @@ class ComlinkClient {
       });
 
       await this.installerClient.connect(transport);
-      console.log('🐱 Connected to installer');
+      console.log('🛰️ Connected to installer');
     } catch (error) {
       console.error('Failed to connect to installer:', error);
       throw error;
@@ -249,36 +249,36 @@ class ComlinkClient {
     
     if (intent.toolCandidates.length === 0) {
       // No matching installed tools
-      return `🐱 I don't have any tools installed that can help with that. Try "install giphy" or "discover tools" to see what's available!`;
+      return `🛰️ I don't have any tools installed that can help with that. Try "install giphy" or "discover tools" to see what's available!`;
     }
 
     if (intent.toolCandidates.length > 1) {
       // Ambiguous intent
       const toolNames = intent.toolCandidates.map(id => id.replace('social.catalog.', ''));
-      return `🐱 I'm not sure which tool you want to use. I found: ${toolNames.join(', ')}. Can you be more specific?`;
+      return `🛰️ I'm not sure which tool you want to use. I found: ${toolNames.join(', ')}. Can you be more specific?`;
     }
 
     const toolId = intent.toolCandidates[0];
     const tool = this.installedTools.get(toolId);
     
     if (!tool) {
-      return `🐱 Tool ${toolId} is not properly installed. Try reinstalling it.`;
+      return `🛰️ Tool ${toolId} is not properly installed. Try reinstalling it.`;
     }
 
     // For now, return a mock response
     // In production, this would call the actual MCP tool
     switch (toolId) {
       case 'social.catalog.giphy':
-        return `🐱 Found GIF for "${intent.parameters.query}"! [Mock: Would attach GIF here]`;
+        return `🛰️ Found GIF for "${intent.parameters.query}"! [Mock: Would attach GIF here]`;
       
       case 'social.catalog.weather':
-        return `🐱 Weather for ${intent.parameters.location}: Sunny, 72°F [Mock: Would show detailed forecast]`;
+        return `🛰️ Weather for ${intent.parameters.location}: Sunny, 72°F [Mock: Would show detailed forecast]`;
       
       case 'social.catalog.maps':
-        return `🐱 Route from ${intent.parameters.from} to ${intent.parameters.to}: 15 minutes [Mock: Would show directions]`;
+        return `🛰️ Route from ${intent.parameters.from} to ${intent.parameters.location}: 15 minutes [Mock: Would show directions]`;
       
       default:
-        return `🐱 Tool ${toolId} is installed but not yet implemented.`;
+        return `🛰️ Tool ${toolId} is installed but not yet implemented.`;
     }
   }
 
@@ -299,7 +299,7 @@ class ComlinkClient {
         createdAt: new Date().toISOString(),
       });
 
-      console.log('🐱 Posted to Bluesky:', processedText);
+      console.log('🛰️ Posted to Bluesky:', processedText);
     } catch (error) {
       console.error('Failed to post:', error);
       throw error;

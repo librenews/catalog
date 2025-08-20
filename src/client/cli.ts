@@ -33,7 +33,7 @@ class ComlinkCLI {
   private async runCommandLoop(): Promise<void> {
     while (true) {
       try {
-        const input = await this.prompt('🐱 ');
+        const input = await this.prompt('🛰️ ');
         const [command, ...args] = input.trim().split(' ');
 
         switch (command.toLowerCase()) {
@@ -57,25 +57,25 @@ class ComlinkCLI {
             break;
           case 'quit':
           case 'exit':
-            console.log('🐱 Goodbye!');
+            console.log('🛰️ Goodbye!');
             await this.client.close();
             this.rl.close();
             return;
           case '':
             break;
           default:
-            console.log(`🐱 Unknown command: ${command}`);
-            console.log('🐱 Type "help" for available commands');
+            console.log(`🛰️ Unknown command: ${command}`);
+            console.log('🛰️ Type "help" for available commands');
         }
       } catch (error) {
-        console.error('🐱 Error:', error);
+        console.error('🛰️ Error:', error);
       }
     }
   }
 
   private async handleLogin(args: string[]): Promise<void> {
     if (args.length < 2) {
-      console.log('🐱 Usage: login <identifier> <password>');
+      console.log('🛰️ Usage: login <identifier> <password>');
       return;
     }
 
@@ -85,15 +85,15 @@ class ComlinkCLI {
       await this.client.authenticate(identifier, password);
       await this.client.loadInstalledTools();
       await this.client.connectInstaller();
-      console.log('🐱 Successfully logged in and connected!');
+      console.log('🛰️ Successfully logged in and connected!');
     } catch (error) {
-      console.error('🐱 Login failed:', error);
+      console.error('🛰️ Login failed:', error);
     }
   }
 
   private async handleInstall(args: string[]): Promise<void> {
     if (args.length < 1) {
-      console.log('🐱 Usage: install <tool> [version]');
+      console.log('🛰️ Usage: install <tool> [version]');
       return;
     }
 
@@ -101,15 +101,15 @@ class ComlinkCLI {
     
     try {
       const result = await this.client.installTool(tool, version);
-      console.log(`🐱 ${result}`);
+      console.log(`🛰️ ${result}`);
     } catch (error) {
-      console.error('🐱 Installation failed:', error);
+      console.error('🛰️ Installation failed:', error);
     }
   }
 
   private async handleUninstall(args: string[]): Promise<void> {
     if (args.length < 1) {
-      console.log('🐱 Usage: uninstall <tool>');
+      console.log('🛰️ Usage: uninstall <tool>');
       return;
     }
 
@@ -117,24 +117,24 @@ class ComlinkCLI {
     
     try {
       const result = await this.client.uninstallTool(tool);
-      console.log(`🐱 ${result}`);
+      console.log(`🛰️ ${result}`);
     } catch (error) {
-      console.error('🐱 Uninstallation failed:', error);
+      console.error('🛰️ Uninstallation failed:', error);
     }
   }
 
   private async handleList(): Promise<void> {
     try {
       const result = await this.client.listInstalledTools();
-      console.log(`🐱 ${result}`);
+      console.log(`🛰️ ${result}`);
     } catch (error) {
-      console.error('🐱 Failed to list tools:', error);
+      console.error('🛰️ Failed to list tools:', error);
     }
   }
 
   private async handleDiscover(args: string[]): Promise<void> {
     if (args.length < 1) {
-      console.log('🐱 Usage: discover <query> [category]');
+      console.log('🛰️ Usage: discover <query> [category]');
       return;
     }
 
@@ -142,15 +142,15 @@ class ComlinkCLI {
     
     try {
       const result = await this.client.discoverTools(query, category);
-      console.log(`🐱 ${result}`);
+      console.log(`🛰️ ${result}`);
     } catch (error) {
-      console.error('🐱 Discovery failed:', error);
+      console.error('🛰️ Discovery failed:', error);
     }
   }
 
   private async handlePost(args: string[]): Promise<void> {
     if (args.length < 1) {
-      console.log('🐱 Usage: post <text>');
+      console.log('🛰️ Usage: post <text>');
       return;
     }
 
@@ -158,9 +158,9 @@ class ComlinkCLI {
     
     try {
       await this.client.post(text);
-      console.log('🐱 Post processed and sent to Bluesky!');
+      console.log('🛰️ Post processed and sent to Bluesky!');
     } catch (error) {
-      console.error('🐱 Post failed:', error);
+      console.error('🛰️ Post failed:', error);
     }
   }
 

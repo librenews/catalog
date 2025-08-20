@@ -213,7 +213,7 @@ class ComlinkServer {
         content: [
           {
             type: 'text',
-            text: `🐱 Error processing message: ${error}`,
+            text: `🛰️ Error processing message: ${error}`,
           },
         ],
       };
@@ -232,7 +232,7 @@ class ComlinkServer {
           content: [
             {
               type: 'text',
-              text: `🐱 Couldn't find a tool called "${toolName}". Try searching for available tools.`,
+              text: `🛰️ Couldn't find a tool called "${toolName}". Try searching for available tools.`,
             },
           ],
         };
@@ -246,7 +246,7 @@ class ComlinkServer {
         content: [
           {
             type: 'text',
-            text: `🐱 Installed ${tool.name} (${tool.id}) - ${tool.description}`,
+            text: `🛰️ Installed ${tool.name} (${tool.id}) - ${tool.description}`,
           },
         ],
       };
@@ -255,7 +255,7 @@ class ComlinkServer {
         content: [
           {
             type: 'text',
-            text: `🐱 Failed to install ${toolName}: ${error}`,
+            text: `🛰️ Failed to install ${toolName}: ${error}`,
           },
         ],
       };
@@ -274,7 +274,7 @@ class ComlinkServer {
         content: [
           {
             type: 'text',
-            text: `🐱 Uninstalled ${toolName}`,
+            text: `🛰️ Uninstalled ${toolName}`,
           },
         ],
       };
@@ -283,7 +283,7 @@ class ComlinkServer {
         content: [
           {
             type: 'text',
-            text: `🐱 Failed to uninstall ${toolName}: ${error}`,
+            text: `🛰️ Failed to uninstall ${toolName}: ${error}`,
           },
         ],
       };
@@ -301,7 +301,7 @@ class ComlinkServer {
           content: [
             {
               type: 'text',
-              text: '🐱 No tools installed. Try "install giphy" to get started!',
+              text: '🛰️ No tools installed. Try "install giphy" to get started!',
             },
           ],
         };
@@ -316,7 +316,7 @@ class ComlinkServer {
         content: [
           {
             type: 'text',
-            text: `🐱 Installed tools:\n${toolList}`,
+            text: `🛰️ Installed tools:\n${toolList}`,
           },
         ],
       };
@@ -325,7 +325,7 @@ class ComlinkServer {
         content: [
           {
             type: 'text',
-            text: `🐱 Error listing tools: ${error}`,
+            text: `🛰️ Error listing tools: ${error}`,
           },
         ],
       };
@@ -343,7 +343,7 @@ class ComlinkServer {
           content: [
             {
               type: 'text',
-              text: `🐱 No tools found matching "${query}".`,
+              text: `🛰️ No tools found matching "${query}".`,
             },
           ],
         };
@@ -357,7 +357,7 @@ class ComlinkServer {
         content: [
           {
             type: 'text',
-            text: `🐱 Found ${tools.length} tools:\n${toolList}`,
+            text: `🛰️ Found ${tools.length} tools:\n${toolList}`,
           },
         ],
       };
@@ -366,7 +366,7 @@ class ComlinkServer {
         content: [
           {
             type: 'text',
-            text: `🐱 Search failed: ${error}`,
+            text: `🛰️ Search failed: ${error}`,
           },
         ],
       };
@@ -382,7 +382,7 @@ class ComlinkServer {
           content: [
             {
               type: 'text',
-              text: '🐱 Scan already in progress. Please wait.',
+              text: '🛰️ Scan already in progress. Please wait.',
             },
           ],
         };
@@ -393,7 +393,7 @@ class ComlinkServer {
           content: [
             {
               type: 'text',
-              text: '🐱 Cache is up to date. Use force=true to scan anyway.',
+              text: '🛰️ Cache is up to date. Use force=true to scan anyway.',
             },
           ],
         };
@@ -405,7 +405,7 @@ class ComlinkServer {
         content: [
           {
             type: 'text',
-            text: `🐱 Scan complete: Found ${result.toolsFound} tools (${result.newTools.length} new)`,
+            text: `🛰️ Scan complete: Found ${result.toolsFound} tools (${result.newTools.length} new)`,
           },
         ],
       };
@@ -414,7 +414,7 @@ class ComlinkServer {
         content: [
           {
             type: 'text',
-            text: `🐱 Scan failed: ${error}`,
+            text: `🛰️ Scan failed: ${error}`,
           },
         ],
       };
@@ -429,7 +429,7 @@ class ComlinkServer {
         content: [
           {
             type: 'text',
-            text: `🐱 Cache Statistics:\n• Total tools: ${stats.total}\n• Last scan: ${stats.lastScan ? stats.lastScan.toISOString() : 'Never'}`,
+            text: `🛰️ Cache Statistics:\n• Total tools: ${stats.total}\n• Last scan: ${stats.lastScan ? stats.lastScan.toISOString() : 'Never'}`,
           },
         ],
       };
@@ -438,7 +438,7 @@ class ComlinkServer {
         content: [
           {
             type: 'text',
-            text: `🐱 Error getting stats: ${error}`,
+            text: `🛰️ Error getting stats: ${error}`,
           },
         ],
       };
@@ -467,7 +467,7 @@ class ComlinkServer {
   async run() {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
-    console.error('social.catalog server running');
+    console.error('comlink server running');
   }
 }
 

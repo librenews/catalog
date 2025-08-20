@@ -36,7 +36,7 @@ export class BlueskyScanner {
     };
 
     try {
-      console.log('🐱 Starting background scan for social.catalog tools...');
+      console.log('🛰️ Starting background scan for social.catalog tools...');
 
       // Scan popular Bluesky feeds for mentions of social.catalog
       await this.scanFeedsForTools(result);
@@ -50,11 +50,11 @@ export class BlueskyScanner {
       }
 
       this.toolCache.updateLastScan();
-      console.log(`🐱 Scan complete: Found ${result.toolsFound} tools (${result.newTools.length} new)`);
+      console.log(`🛰️ Scan complete: Found ${result.toolsFound} tools (${result.newTools.length} new)`);
 
     } catch (error) {
       result.errors.push(`Scan failed: ${error}`);
-      console.error('🐱 Background scan failed:', error);
+      console.error('🛰️ Background scan failed:', error);
     } finally {
       this.scanning = false;
     }

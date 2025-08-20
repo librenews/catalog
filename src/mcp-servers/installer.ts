@@ -183,7 +183,7 @@ class InstallerServer {
       content: [
         {
           type: 'text',
-          text: `🐱 Installed ${toolId}${version ? ` (${version})` : ''}`,
+          text: `🛰️ Installed ${toolId}${version ? ` (${version})` : ''}`,
         },
       ],
     };
@@ -210,7 +210,7 @@ class InstallerServer {
       content: [
         {
           type: 'text',
-          text: `🐱 Uninstalled ${nameOrId}`,
+          text: `🛰️ Uninstalled ${nameOrId}`,
         },
       ],
     };
@@ -231,8 +231,8 @@ class InstallerServer {
         {
           type: 'text',
           text: toolList.length > 0 
-            ? `🐱 Installed tools:\n${toolList.map(t => `• ${t}`).join('\n')}`
-            : '🐱 No tools installed yet',
+                    ? `🛰️ Installed tools:\n${toolList.map(t => `• ${t}`).join('\n')}`
+        : '🛰️ No tools installed yet',
         },
       ],
     };
@@ -258,7 +258,7 @@ class InstallerServer {
         content: [
           {
             type: 'text',
-            text: `🐱 No tools found matching "${query}"${category ? ` in category "${category}"` : ''}`,
+            text: `🛰️ No tools found matching "${query}"${category ? ` in category "${category}"` : ''}`,
           },
         ],
       };
@@ -272,7 +272,7 @@ class InstallerServer {
       content: [
         {
           type: 'text',
-          text: `🐱 Found ${results.length} tools:\n${resultText}`,
+          text: `🛰️ Found ${results.length} tools:\n${resultText}`,
         },
       ],
     };

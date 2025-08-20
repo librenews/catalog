@@ -90,7 +90,7 @@ export class AIOrchestrator {
       default:
         return {
           success: false,
-          content: "🐱 I'm not sure what you want to do. Try 'help' for available commands.",
+          content: "🛰️ I'm not sure what you want to do. Try 'help' for available commands.",
         };
     }
   }
@@ -336,7 +336,7 @@ export class AIOrchestrator {
       if (tools.length === 0) {
         return {
           success: false,
-          content: `🐱 Couldn't find a tool called "${toolName}". Try searching for available tools.`,
+          content: `🛰️ Couldn't find a tool called "${toolName}". Try searching for available tools.`,
         };
       }
 
@@ -345,12 +345,12 @@ export class AIOrchestrator {
 
       return {
         success: true,
-        content: `🐱 Installed ${tool.name} (${tool.id}) - ${tool.description}`,
+        content: `🛰️ Installed ${tool.name} (${tool.id}) - ${tool.description}`,
       };
     } catch (error) {
       return {
         success: false,
-        content: `🐱 Failed to install ${toolName}: ${error}`,
+        content: `🛰️ Failed to install ${toolName}: ${error}`,
         error: String(error),
       };
     }
@@ -367,12 +367,12 @@ export class AIOrchestrator {
       this.installedTools.delete(toolId);
       return {
         success: true,
-        content: `🐱 Uninstalled ${toolName}`,
+        content: `🛰️ Uninstalled ${toolName}`,
       };
     } else {
       return {
         success: false,
-        content: `🐱 ${toolName} is not installed.`,
+        content: `🛰️ ${toolName} is not installed.`,
       };
     }
   }
@@ -385,7 +385,7 @@ export class AIOrchestrator {
     if (!toolId || !this.installedTools.has(toolId)) {
       return {
         success: false,
-        content: `🐱 Tool not installed. Try "install ${toolId?.replace('social.catalog.', '')}" first.`,
+        content: `🛰️ Tool not installed. Try "install ${toolId?.replace('social.catalog.', '')}" first.`,
       };
     }
 
@@ -395,13 +395,13 @@ export class AIOrchestrator {
     if (!tool) {
       return {
         success: false,
-        content: `🐱 Tool ${toolId} not found in cache.`,
+        content: `🛰️ Tool ${toolId} not found in cache.`,
       };
     }
 
     return {
       success: true,
-      content: `🐱 Executed ${tool.name} with parameters: ${JSON.stringify(intent.parameters)}`,
+      content: `🛰️ Executed ${tool.name} with parameters: ${JSON.stringify(intent.parameters)}`,
     };
   }
 
@@ -417,7 +417,7 @@ export class AIOrchestrator {
       if (tools.length === 0) {
         return {
           success: true,
-          content: `🐱 No tools found matching "${query}".`,
+          content: `🛰️ No tools found matching "${query}".`,
         };
       }
 
@@ -427,12 +427,12 @@ export class AIOrchestrator {
 
       return {
         success: true,
-        content: `🐱 Found ${tools.length} tools:\n${toolList}`,
+        content: `🛰️ Found ${tools.length} tools:\n${toolList}`,
       };
     } catch (error) {
       return {
         success: false,
-        content: `🐱 Search failed: ${error}`,
+        content: `🛰️ Search failed: ${error}`,
         error: String(error),
       };
     }
@@ -450,13 +450,13 @@ export class AIOrchestrator {
     if (installedTools.length === 0) {
       return {
         success: true,
-        content: '🐱 No tools installed. Try "install giphy" to get started!',
+        content: '🛰️ No tools installed. Try "install giphy" to get started!',
       };
     }
 
     return {
       success: true,
-      content: `🐱 Installed tools:\n${installedTools.join('\n')}`,
+      content: `🛰️ Installed tools:\n${installedTools.join('\n')}`,
     };
   }
 
@@ -464,7 +464,7 @@ export class AIOrchestrator {
    * Execute help intent
    */
   private async executeHelp(intent: Intent): Promise<ExecutionResult> {
-    const helpText = `🐱 Available commands:
+    const helpText = `🛰️ Available commands:
 
 • install <tool> - Install a tool (e.g., "install giphy")
 • uninstall <tool> - Remove a tool

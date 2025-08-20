@@ -1,151 +1,161 @@
-# social.catalog 🐱
+# Comlink 🛰️
 
-A natural language social command line for Bluesky powered by the Model Context Protocol (MCP).
+A social command line on Bluesky powered by MCP (Model Context Protocol).
 
-## Overview
+## Features
 
-social.catalog enables users to invoke tools with **natural language posts** (no slash syntax) via MCP. Users explicitly install the tools/lexicons they want, and the client only considers those approved tools when interpreting posts.
+- **🛰️ MCP Server Integration** - Real Model Context Protocol server
+- **🎬 Giphy API Integration** - Search and display GIFs
+- **🌐 Web Interface** - Modern chat-based UI
+- **🔧 Tool Management** - Install and manage tools
+- **📡 Bluesky Ready** - Prepared for AT Protocol integration
 
-## Core Concepts
+## Quick Start
 
-- **Installable toolkits**: Users "install" tool wrappers (e.g., `social.catalog.giphy`, `social.catalog.maps`) that point to MCP tools/resources
-- **Consent-scoped execution**: Only installed tools are callable for a user
-- **Natural language → tool calls**: The client interprets a post, selects an installed tool, fills parameters, executes, and posts results
-- **No slash commands required**: Plain language replaces `/gif`, `/map`, etc.
-
-## Architecture
-
-### Lexicons
-
-- `social.catalog.mcp` - Generic schema to describe MCP tools within ATProto
-- `social.catalog.installed` - Per-user registry of approved tools
-- `social.catalog.giphy` - Example tool wrapper for Giphy integration
-
-### MCP Servers
-
-- `social.catalog.installer` - Handles tool installation, uninstallation, and discovery
-
-### Client
-
-- Natural language interpretation
-- Tool selection and parameter extraction
-- Bluesky integration for posting
-
-## Installation
+### 1. Install Dependencies
 
 ```bash
 npm install
 ```
 
-## Development
+### 2. Environment Setup
+
+Create a `.env` file in the root directory:
 
 ```bash
-# Build the project
-npm run build
-
-# Run the CLI in development mode
-npm run dev
-
-# Run the installer MCP server
-npm run installer
+# Copy the example and edit with your values
+cp .env.example .env
 ```
+
+**Required Environment Variables:**
+
+```env
+# API Keys
+GIPHY_API_KEY=your_giphy_api_key_here
+
+# Server Configuration
+API_PORT=3001
+WEB_PORT=1111
+
+# Development Settings
+NODE_ENV=development
+DEBUG=false
+```
+
+**Getting a Giphy API Key:**
+1. Visit [Giphy Developers](https://developers.giphy.com/)
+2. Create an account and app
+3. Copy your API key to `GIPHY_API_KEY` in `.env`
+
+### 3. Build the Project
+
+```bash
+npm run build
+```
+
+### 4. Start the Servers
+
+**Option A: Start both servers together**
+```bash
+npm run dev:full
+```
+
+**Option B: Start servers separately**
+```bash
+# Terminal 1: API Server
+npm run api
+
+# Terminal 2: Web Server
+npm run web
+```
+
+### 5. Access the Application
+
+- **Web Interface**: http://localhost:1111
+- **API Server**: http://localhost:3001
 
 ## Usage
 
-### CLI Commands
+### Web Interface
 
-```bash
-# Authenticate with Bluesky
-login <identifier> <password>
+1. **Install Tools**: Type "install giphy" to install the Giphy tool
+2. **Search GIFs**: Type "show me a gif of cats" to search for GIFs
+3. **List Tools**: Type "list" to see installed tools
+4. **Get Help**: Type "help" for available commands
 
-# Install a tool
-install giphy
+### API Endpoints
 
-# List installed tools
-list
+- `GET /health` - Check server status
+- `POST /api/mcp` - Send MCP commands
+- `POST /api/install` - Install tools
+- `GET /api/tools` - List installed tools
+- `POST /api/search` - Search for tools
 
-# Discover available tools
-discover gif
+## Development
 
-# Post with tool processing
-post "happy birthday with a gif from giphy"
-```
-
-### Example Workflows
-
-1. **Install and use Giphy**:
-   ```
-   install giphy
-   post "happy birthday Kim with a happy birthday gif from giphy"
-   ```
-
-2. **Weather information**:
-   ```
-   install weather
-   post "what's the weather like in San Francisco"
-   ```
-
-3. **Directions**:
-   ```
-   install maps
-   post "directions from San Francisco to Los Angeles"
-   ```
-
-## Project Structure
+### Project Structure
 
 ```
 src/
-├── lexicons/           # ATProto lexicon definitions
-│   ├── social.catalog.mcp.json
-│   ├── social.catalog.installed.json
-│   └── social.catalog.giphy.json
-├── mcp-servers/        # MCP server implementations
-│   └── installer.ts
-├── client/             # Client implementation
-│   ├── social-catalog-client.ts
-│   └── cli.ts
-└── installer/          # Installation utilities
+├── config/           # Environment configuration
+├── core/            # Core business logic
+├── mcp-servers/     # MCP server implementations
+├── services/        # External API services
+├── web/             # Web interface
+└── web-api/         # API server
 ```
 
-## Security & Consent
+### Available Scripts
 
-- **Positive selection**: Only installed tools can be invoked
-- **Capability tags**: Tools declare scopes (e.g., `post-write`, `dm-send`, `media-read`)
-- **Sensitive operations**: Require per-tool confirmation on first use
-- **No background execution**: All tool calls require explicit user context
+- `npm run build` - Build TypeScript
+- `npm run api` - Start API server
+- `npm run web` - Start web server
+- `npm run dev:full` - Start both servers
+- `npm run server` - Start MCP server
+- `npm run web:restart` - Restart web server
 
-## Roadmap
+### Environment Variables
 
-### Phase 1: Core Infrastructure ✅
-- [x] Lexicon schemas (`social.catalog.mcp`, `social.catalog.installed`)
-- [x] Installer MCP server
-- [x] Basic client with NLU
-- [x] CLI interface
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `GIPHY_API_KEY` | Giphy API key | `dc6zaTOxFJmzC` (demo) |
+| `API_PORT` | API server port | `3001` |
+| `WEB_PORT` | Web server port | `1111` |
+| `NODE_ENV` | Environment mode | `development` |
+| `DEBUG` | Debug mode | `false` |
 
-### Phase 2: Tool Implementations
-- [ ] Giphy MCP server
-- [ ] Weather MCP server
-- [ ] Maps MCP server
-- [ ] Real ATProto integration for tool registry
+## Architecture
 
-### Phase 3: Advanced Features
-- [ ] Bundle installations
-- [ ] Tool discovery directory
-- [ ] Community-shared tool sets
-- [ ] Enhanced NLU with better intent detection
+### MCP (Model Context Protocol)
+
+Comlink uses MCP to provide a standardized interface for tool discovery and execution:
+
+- **Tool Registry**: Central registry of available tools
+- **Installation Management**: Per-user tool installation tracking
+- **Natural Language Processing**: Convert user requests to tool calls
+- **Execution Orchestration**: Coordinate tool execution and responses
+
+### Web Interface
+
+The web interface provides a chat-based UI for interacting with Comlink:
+
+- **Real-time Communication**: WebSocket-like experience via HTTP
+- **Tool Management**: Install, uninstall, and list tools
+- **Natural Language**: Type requests in plain English
+- **Responsive Design**: Works on desktop and mobile
 
 ## Contributing
 
 1. Fork the repository
 2. Create a feature branch
-3. Implement your changes
+3. Make your changes
 4. Add tests if applicable
 5. Submit a pull request
 
 ## License
 
-ISC
+ISC License
 
-## Brand Note
+## Support
 
-The **cat emoji 🐱** is part of the Catalog.social identity and is used throughout the UI and confirmation messages.
+For questions or issues, please open an issue on GitHub.
