@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skywire 🚀</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">🚀</span>
+                    <h1>Skywire</h1>
+                </div>
+                <div class="header-actions">
+                    <button id="clearChat" class="btn-secondary">Clear Chat</button>
+                    <button id="showHelp" class="btn-secondary">Help</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Chat Area -->
+        <main class="chat-container">
+            <div class="chat-messages" id="chatMessages">
+                <!-- Welcome message -->
+                <div class="message bot-message">
+                    <div class="message-content">
+                        <div class="message-text">
+                            <p>🚀 Welcome to <strong>Skywire</strong>!</p>
+                            <p>I'm your AI assistant for discovering and using tools on Bluesky. Here's what you can do:</p>
+                            <ul>
+                                <li><strong>Install tools:</strong> "install giphy"</li>
+                                <li><strong>Use tools:</strong> "happy birthday with a gif"</li>
+                                <li><strong>Search tools:</strong> "search for weather tools"</li>
+                                <li><strong>List tools:</strong> "show my installed tools"</li>
+                            </ul>
+                            <p>Try saying "help" for more commands!</p>
+                        </div>
+                        <div class="message-time">Just now</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <textarea 
+                        id="messageInput" 
+                        class="message-input" 
+                        placeholder="Type your message here... (e.g., 'install giphy' or 'happy birthday with a gif')"
+                        rows="1"
+                    ></textarea>
+                    <button id="sendButton" class="send-button">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22,2 15,22 11,13 2,9"></polygon>
+                        </svg>
+                    </button>
+                </div>
+                <div class="input-hint">
+                    Press <kbd>Enter</kbd> to send, <kbd>Shift+Enter</kbd> for new line
+                </div>
+            </div>
+        </main>
+
+        <!-- Sidebar (collapsible on mobile) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h3>Quick Actions</h3>
+                <button id="closeSidebar" class="close-sidebar">×</button>
+            </div>
+            
+            <div class="sidebar-section">
+                <h4>Tool Management</h4>
+                <button class="sidebar-btn" data-action="list-tools">
+                    📋 List Installed Tools
+                </button>
+                <button class="sidebar-btn" data-action="search-tools">
+                    🔍 Search Tools
+                </button>
+                <button class="sidebar-btn" data-action="scan-tools">
+                    🔄 Scan for New Tools
+                </button>
+            </div>
+
+            <div class="sidebar-section">
+                <h4>Popular Tools</h4>
+                <button class="sidebar-btn" data-action="install-giphy">
+                    🎬 Install Giphy
+                </button>
+                <button class="sidebar-btn" data-action="install-weather">
+                    🌤️ Install Weather
+                </button>
+                <button class="sidebar-btn" data-action="install-maps">
+                    🗺️ Install Maps
+                </button>
+            </div>
+
+            <div class="sidebar-section">
+                <h4>System</h4>
+                <button class="sidebar-btn" data-action="cache-stats">
+                    📊 Cache Statistics
+                </button>
+                <button class="sidebar-btn" data-action="help">
+                    ❓ Help
+                </button>
+            </div>
+        </aside>
+
+        <!-- Mobile sidebar toggle -->
+        <button id="sidebarToggle" class="sidebar-toggle">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Loading overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>🐱 Processing...</p>
+        </div>
+    </div>
+
+    <!-- Help modal -->
+    <div id="helpModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🐱 social.catalog Help</h2>
+                <button class="modal-close" id="closeHelpModal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="help-section">
+                    <h3>Basic Commands</h3>
+                    <ul>
+                        <li><code>install giphy</code> - Install the Giphy tool</li>
+                        <li><code>uninstall giphy</code> - Remove the Giphy tool</li>
+                        <li><code>list</code> - Show installed tools</li>
+                        <li><code>search gif</code> - Find tools related to GIFs</li>
+                    </ul>
+                </div>
+                
+                <div class="help-section">
+                    <h3>Natural Language</h3>
+                    <ul>
+                        <li><code>happy birthday with a gif</code> - Use Giphy to find a birthday GIF</li>
+                        <li><code>what's the weather in San Francisco</code> - Get weather information</li>
+                        <li><code>directions from NYC to LA</code> - Get driving directions</li>
+                    </ul>
+                </div>
+
+                <div class="help-section">
+                    <h3>System Commands</h3>
+                    <ul>
+                        <li><code>help</code> - Show this help</li>
+                        <li><code>scan</code> - Scan for new tools on Bluesky</li>
+                        <li><code>stats</code> - Show cache statistics</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
