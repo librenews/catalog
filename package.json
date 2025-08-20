@@ -10,7 +10,9 @@
     "dev": "ts-node src/client/cli.ts",
     "installer": "node dist/mcp-servers/installer.js",
     "giphy": "node dist/mcp-servers/giphy.js",
+    "server": "node dist/mcp-servers/social-catalog-server.js",
     "demo": "node dist/test-demo.js",
+    "test-new": "node dist/test-new-architecture.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
